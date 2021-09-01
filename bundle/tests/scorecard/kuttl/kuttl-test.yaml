@@ -1,0 +1,5 @@
+apiVersion: kudo.dev/v1beta1
+kind: TestSuite
+timeout: 600
+startControlPlane: false
+suppressLog: events

@@ -1,0 +1,49 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: rhoam-test-container
+  namespace: redhat-rhoam-operator
+spec:
+  restartPolicy: Never
+  serviceAccountName: cluster-admin-sa
+  containers:
+    - resources: {}
+      name: test
+      env:
+        - name: DESTRUCTIVE
+          value: 'false'
+        - name: MULTIAZ
+          value: 'false'
+        - name: WATCH_NAMESPACE
+          value: redhat-rhoam-operator
+      imagePullPolicy: Always
+      volumeMounts:
+        - name: test-run-results
+          mountPath: /test-run-results
+      terminationMessagePolicy: File
+      image: "quay.io/psturc/integreatly-operator-test-harness:kuttl-scorecard"
+      args:
+        - '-ginkgo.focus'
+        - 'Verify RHMI CRD Exists'
+    - resources: {}
+      terminationMessagePath: /dev/termination-log
+      name: sidecar
+      command:
+        - sh
+      securityContext:
+        capabilities:
+          drop:
+            - MKNOD
+      imagePullPolicy: Always
+      volumeMounts:
+        - name: test-run-results
+          mountPath: /test-run-results
+      terminationMessagePolicy: File
+      image: busybox
+      args:
+        - '-c'
+        - 'while true; if [[ -f /tmp/done ]]; then exit 0; fi; do sleep 1; done'
+  serviceAccount: cluster-admin-sa
+  volumes:
+    - name: test-run-results
+      emptyDir: {}
