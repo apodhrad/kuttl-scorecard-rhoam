@@ -8,3 +8,4 @@ stages:
     labels:
       suite: rhoam-basic
       test: rhoam-basic
+serviceaccount: cluster-admin-sa
