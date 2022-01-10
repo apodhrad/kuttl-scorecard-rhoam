@@ -4,8 +4,11 @@ metadata:
   name: config
 stages:
 - tests:
-  - image: quay.io/operator-framework/scorecard-test-kuttl:dev
+  - image: quay.io/operator-framework/scorecard-test-kuttl:v2.0.0
     labels:
       suite: rhoam-basic
       test: rhoam-basic
-serviceaccount: cluster-admin-sa
+# This doesn't work bacause https://github.com/operator-framework/api/pull/166
+# serviceaccount: cluster-admin-sa
+# So, we need to use the following workaround
+string: cluster-admin-sa
