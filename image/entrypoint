@@ -11,6 +11,8 @@ kubectl-kuttl test "${KUTTL_PATH}" \
   --namespace="${SCORECARD_NAMESPACE}" \
   --report=JSON --artifacts-dir=/tmp > /tmp/kuttl-installation.stdout 2> /tmp/kuttl-installation.stderr
 
+# If installation test did not fail, proceed with test name passed
+# as a parameter from scorecard command
 if ! grep -q "\"failure\"" /tmp/kuttl-test.json;
 then
   echo "Running ${*}" >> /tmp/log
