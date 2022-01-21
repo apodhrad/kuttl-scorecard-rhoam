@@ -1,0 +1,25 @@
+#!/bin/sh
+
+KUTTL_PATH=${KUTTL_PATH:-"/bundle/tests/scorecard/kuttl"}
+KUTTL_CONFIG=${KUTTL_CONFIG:-"${KUTTL_PATH}/kuttl-test.yaml"}
+
+echo "Running installation" >> /tmp/log
+
+kubectl-kuttl test "${KUTTL_PATH}" \
+  --test 00-installation \
+  --config="${KUTTL_CONFIG}" \
+  --namespace="${SCORECARD_NAMESPACE}" \
+  --report=JSON --artifacts-dir=/tmp > /tmp/kuttl-installation.stdout 2> /tmp/kuttl-installation.stderr
+
+if ! grep -q "\"failure\"" /tmp/kuttl-test.json;
+then
+  echo "Running ${*}" >> /tmp/log
+
+  kubectl-kuttl test "${KUTTL_PATH}" \
+    --test "${*}" \
+    --config="${KUTTL_CONFIG}" \
+    --namespace="${SCORECARD_NAMESPACE}" \
+    --report=JSON --artifacts-dir=/tmp > /tmp/kuttl.stdout 2> /tmp/kuttl.stderr
+fi
+
+exec scorecard-test-kuttl "${*}"

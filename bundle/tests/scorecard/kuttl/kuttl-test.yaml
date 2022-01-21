@@ -1,5 +1,9 @@
-apiVersion: kudo.dev/v1beta1
+apiVersion: kuttl.dev/v1beta1
 kind: TestSuite
-timeout: 600
+namespace: redhat-rhoam-operator
+parallel: 1 # Run tests in serial
+skipDelete: true
 startControlPlane: false
-suppressLog: events
+suppress:
+  - events
+timeout: 60 # timeout in seconds for each step

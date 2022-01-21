@@ -8,11 +8,11 @@ roleRef:
   name: cluster-admin
 subjects:
 - kind: ServiceAccount
-  name: cluster-admin-sa
+  name: rhoam-test-runner
   namespace: redhat-rhoam-operator
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: cluster-admin-sa
+  name: rhoam-test-runner
   namespace: redhat-rhoam-operator

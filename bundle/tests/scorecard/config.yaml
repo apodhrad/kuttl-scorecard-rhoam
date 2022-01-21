@@ -1,14 +1,34 @@
+apiVersion: scorecard.operatorframework.io/v1alpha3
 kind: Configuration
-apiversion: scorecard.operatorframework.io/v1alpha3
 metadata:
   name: config
 stages:
-- tests:
-  - image: quay.io/operator-framework/scorecard-test-kuttl:v2.0.0
+- parallel: true
+  tests:
+  - entrypoint:
+    - entrypoint
+    - 01-happy-path
+    image: quay.io/psturc/scorecard-test-kuttl:latest
     labels:
-      suite: rhoam-basic
-      test: rhoam-basic
-# This doesn't work bacause https://github.com/operator-framework/api/pull/166
-# serviceaccount: cluster-admin-sa
-# So, we need to use the following workaround
-string: cluster-admin-sa
+      cluster-product: ocp
+      cluster-size: small
+      phase: msp-main
+      test: happy-path
+    storage:
+      spec:
+        mountPath: {}
+  - entrypoint:
+    - entrypoint
+    - 02-scalability
+    image: quay.io/psturc/scorecard-test-kuttl:latest
+    labels:
+      cluster-product: ocp
+      cluster-size: small
+      phase: msp-main
+      test: scalability
+    storage:
+      spec:
+        mountPath: {}
+storage:
+  spec:
+    mountPath: {}
