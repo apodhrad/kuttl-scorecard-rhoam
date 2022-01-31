@@ -22,6 +22,9 @@ then
     --config="${KUTTL_CONFIG}" \
     --namespace="${SCORECARD_NAMESPACE}" \
     --report=JSON --artifacts-dir=/tmp > /tmp/kuttl.stdout 2> /tmp/kuttl.stderr
+
+  # Copy test results (junit-integreatly-operator.xml) from RHOAM test container to /tmp
+  kubectl cp rhoam-test-container:/test-run-results/ /tmp -c sidecar -n redhat-rhoam-operator > /dev/null 2>&1
 fi
 
 exec scorecard-test-kuttl "${*}"
