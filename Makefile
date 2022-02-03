@@ -1,4 +1,4 @@
-VERSION ?= 0.0.7
+VERSION ?= 0.0.16
 IMAGE ?= quay.io/psturc/scorecard-test-kuttl:${VERSION}
 
 .PHONY: image/build/push

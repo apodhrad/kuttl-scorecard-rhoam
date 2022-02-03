@@ -23,7 +23,7 @@ stages:
     image: quay.io/psturc/scorecard-test-kuttl:latest
     labels:
       cluster-product: ocp
-      cluster-size: small
+      cluster-size: medium
       phase: msp-main
       test: scalability
     storage:
@@ -31,4 +31,5 @@ stages:
         mountPath: {}
 storage:
   spec:
-    mountPath: {}
+    mountPath:
+      path: logs/artifacts

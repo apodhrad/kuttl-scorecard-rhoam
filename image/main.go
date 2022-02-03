@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -27,15 +28,19 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+var kuttlTestOutputFolder string
+
 // The scorecard test kuttl binary processes the
 // output from kuttl converting kuttl output into the
 // scorecard v1alpha3.TestStatus json format.
 //
 // The kuttl output is expected to be produced by kubectl-kuttl
-// at /tmp/kuttl-test.json.
+// at directory specified with param -kuttl-test-output-folder="$PATH_TO_KUTTL_TEST_OUTPUT_FOLDER" or /tmp (default).
 func main() {
+	flag.StringVar(&kuttlTestOutputFolder, "kuttl-test-output-folder", "/tmp", "path to the folder with output from kuttl test")
+	flag.Parse()
 
-	jsonFile, err := os.Open("/tmp/kuttl-test.json")
+	jsonFile, err := os.Open(kuttlTestOutputFolder + "/kuttl-test.json")
 	if err != nil {
 		printErrorStatus(fmt.Errorf("could not open kuttl report %v", err))
 		return
@@ -192,13 +197,13 @@ type Testsuites struct {
 }
 
 func getKuttlLogs() string {
-	stderrFile, err := ioutil.ReadFile("/tmp/kuttl.stderr")
+	stderrFile, err := ioutil.ReadFile(kuttlTestOutputFolder + "/kuttl.stderr")
 	if err != nil {
 		printErrorStatus(fmt.Errorf("could not open kuttl stderr file %v", err))
 		return err.Error()
 	}
 
-	stdoutFile, err := ioutil.ReadFile("/tmp/kuttl.stdout")
+	stdoutFile, err := ioutil.ReadFile(kuttlTestOutputFolder + "/kuttl.stdout")
 	if err != nil {
 		printErrorStatus(fmt.Errorf("could not open kuttl stdout file %v", err))
 		return err.Error()
